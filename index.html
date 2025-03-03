@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de Oposiciones en España</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #1a237e;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            text-align: center;
+        }
+        
+        header p {
+            text-align: center;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        
+        .search-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: #304ffe;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #1a237e;
+        }
+        
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .filters .form-group {
+            flex: 1 1 200px;
+        }
+        
+        .results {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .results h2 {
+            color: #1a237e;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .results-list {
+            list-style: none;
+        }
+        
+        .result-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s;
+        }
+        
+        .result-item:hover {
+            background-color: #f8f8f8;
+        }
+        
+        .result-item h3 {
+            color: #304ffe;
+            margin-bottom: 10px;
+        }
+        
+        .result-item p {
+            margin-bottom: 5px;
+            color: #555;
+        }
+        
+        .tag {
+            display: inline-block;
+            background-color: #e3f2fd;
+            color: #0d47a1;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .highlight {
+            color: #304ffe;
+            font-weight: 600;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px 0;
+            color: #777;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px 0;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+            }
+            
+            .filters .form-group {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Buscador de Oposiciones en España</h1>
+            <p>Encuentra fácilmente información sobre oposiciones en todo el territorio español</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="search-container">
+            <div class="form-group">
+                <label for="search">Buscar oposiciones</label>
+                <input type="text" id="search" placeholder="Ej: Profesor, Policía, Administración...">
+            </div>
+            
+            <div class="filters">
+                <div class="form-group">
+                    <label for="comunidad">Comunidad Autónoma</label>
+                    <select id="comunidad">
+                        <option value="">Todas</option>
+                        <option value="andalucia">Andalucía</option>
+                        <option value="aragon">Aragón</option>
+                        <option value="asturias">Asturias</option>
+                        <option value="baleares">Baleares</option>
+                        <option value="canarias">Canarias</option>
+                        <option value="cantabria">Cantabria</option>
+                        <option value="castillaleon">Castilla y León</option>
+                        <option value="castillamancha">Castilla-La Mancha</option>
+                        <option value="cataluna">Cataluña</option>
+                        <option value="ceuta">Ceuta</option>
+                        <option value="extremadura">Extremadura</option>
+                        <option value="galicia">Galicia</option>
+                        <option value="larioja">La Rioja</option>
+                        <option value="madrid">Madrid</option>
+                        <option value="melilla">Melilla</option>
+                        <option value="murcia">Murcia</option>
+                        <option value="navarra">Navarra</option>
+                        <option value="paisvasco">País Vasco</option>
+                        <option value="valencia">Comunidad Valenciana</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="nivel">Nivel de titulación</label>
+                    <select id="nivel">
+                        <option value="">Todos</option>
+                        <option value="a1">A1 - Título de Doctor/Licenciado/Grado</option>
+                        <option value="a2">A2 - Título de Grado/Diplomado</option>
+                        <option value="b1">B1 - Título de Técnico Superior</option>
+                        <option value="b2">B2 - Título de Bachiller o Técnico</option>
+                        <option value="c1">C1 - Título de ESO</option>
+                        <option value="c2">C2 - Sin titulación</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <select id="estado">
+                        <option value="">Todos</option>
+                        <option value="convocada">Convocada</option>
+                        <option value="plazo">En plazo de inscripción</option>
+                        <option value="proxima">Próxima convocatoria</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button id="buscar">Buscar Oposiciones</button>
+        </div>
+        
+        <div class="results">
+            <h2>Resultados de búsqueda</h2>
+            <ul class="results-list" id="results-list">
+                <!-- Los resultados se cargarán aquí -->
+            </ul>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2025 Buscador de Oposiciones en España | Esta aplicación es una demostración</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Datos de ejemplo para las oposiciones
+        const oposiciones = [
+            {
+                id: 1,
+                titulo: "Profesor de Educación Secundaria",
+                organismo: "Ministerio de Educación",
+                comunidad: "madrid",
+                nivel: "a1",
+                plazas: 450,
+                estado: "convocada",
+                fechaPublicacion: "15/02/2025",
+                fechaLimite: "15/03/2025",
+                descripcion: "Convocatoria para cubrir plazas de Profesor de Educación Secundaria en diferentes especialidades."
+            },
+            {
+                id: 2,
+                titulo: "Auxiliar Administrativo",
+                organismo: "Ministerio de Hacienda",
+                comunidad: "andalucia",
+                nivel: "c1",
+                plazas: 200,
+                estado: "plazo",
+                fechaPublicacion: "01/02/2025",
+                fechaLimite: "20/03/2025",
+                descripcion: "Proceso selectivo para ingreso en el Cuerpo General Auxiliar de la Administración del Estado."
+            },
+            {
+                id: 3,
+                titulo: "Policía Nacional",
+                organismo: "Ministerio del Interior",
+                comunidad: "",
+                nivel: "b1",
+                plazas: 2500,
+                estado: "proxima",
+                fechaPublicacion: "Prevista para abril 2025",
+                fechaLimite: "Pendiente",
+                descripcion: "Oposiciones para el ingreso en la Escala Básica del Cuerpo Nacional de Policía."
+            },
+            {
+                id: 4,
+                titulo: "Enfermero/a",
+                organismo: "Servicio Catalán de Salud",
+                comunidad: "cataluna",
+                nivel: "a2",
+                plazas: 350,
+                estado: "convocada",
+                fechaPublicacion: "20/01/2025",
+                fechaLimite: "10/03/2025",
+                descripcion: "Convocatoria para cubrir plazas de personal estatutario en la categoría de enfermero/a."
+            },
+            {
+                id: 5,
+                titulo: "Bombero",
+                organismo: "Ayuntamiento de Valencia",
+                comunidad: "valencia",
+                nivel: "b2",
+                plazas: 60,
+                estado: "plazo",
+                fechaPublicacion: "05/02/2025",
+                fechaLimite: "25/03/2025",
+                descripcion: "Proceso selectivo para el acceso al cuerpo de Bomberos del Ayuntamiento de Valencia."
+            },
+            {
+                id: 6,
+                titulo: "Administrativo",
+                organismo: "Junta de Andalucía",
+                comunidad: "andalucia",
+                nivel: "c1",
+                plazas: 300,
+                estado: "convocada",
+                fechaPublicacion: "10/02/2025",
+                fechaLimite: "30/03/2025",
+                descripcion: "Convocatoria de pruebas selectivas para el acceso a la categoría de Administrativo de la Junta de Andalucía."
+            },
+            {
+                id: 7,
+                titulo: "Técnico de Hacienda",
+                organismo: "Agencia Tributaria",
+                comunidad: "",
+                nivel: "a2",
+                plazas: 150,
+                estado: "proxima",
+                fechaPublicacion: "Prevista para marzo 2025",
+                fechaLimite: "Pendiente",
+                descripcion: "Proceso selectivo para ingreso en el Cuerpo Técnico de Hacienda."
+            },
+            {
+                id: 8,
+                titulo: "Guardia Civil",
+                organismo: "Ministerio del Interior",
+                comunidad: "",
+                nivel: "b2",
+                plazas: 1800,
+                estado: "convocada",
+                fechaPublicacion: "28/01/2025",
+                fechaLimite: "28/02/2025",
+                descripcion: "Convocatoria para ingreso directo en la Escala de Cabos y Guardias del Cuerpo de la Guardia Civil."
+            },
+            {
+                id: 9,
+                titulo: "Maestro de Educación Primaria",
+                organismo: "Consejería de Educación de Madrid",
+                comunidad: "madrid",
+                nivel: "a2",
+                plazas: 600,
+                estado: "proxima",
+                fechaPublicacion: "Prevista para abril 2025",
+                fechaLimite: "Pendiente",
+                descripcion: "Procedimiento selectivo para ingreso en el Cuerpo de Maestros."
+            },
+            {
+                id: 10,
+                titulo: "Celador",
+                organismo: "Servicio Gallego de Salud",
+                comunidad: "galicia",
+                nivel: "c2",
+                plazas: 120,
+                estado: "plazo",
+                fechaPublicacion: "15/01/2025",
+                fechaLimite: "05/03/2025",
+                descripcion: "Proceso selectivo para el ingreso en la categoría de celador/a del Servicio Gallego de Salud."
+            }
+        ];
+        
+        // Elementos del DOM
+        const searchInput = document.getElementById('search');
+        const comunidadSelect = document.getElementById('comunidad');
+        const nivelSelect = document.getElementById('nivel');
+        const estadoSelect = document.getElementById('estado');
+        const buscarButton = document.getElementById('buscar');
+        const resultsList = document.getElementById('results-list');
+        
+        // Función para filtrar oposiciones
+        function filtrarOposiciones() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const comunidad = comunidadSelect.value;
+            const nivel = nivelSelect.value;
+            const estado = estadoSelect.value;
+            
+            // Filtrar según los criterios seleccionados
+            const resultados = oposiciones.filter(oposicion => {
+                // Filtrar por término de búsqueda
+                const matchesSearch = oposicion.titulo.toLowerCase().includes(searchTerm) || 
+                                    oposicion.organismo.toLowerCase().includes(searchTerm) ||
+                                    oposicion.descripcion.toLowerCase().includes(searchTerm);
+                
+                // Filtrar por comunidad
+                const matchesComunidad = comunidad === "" || oposicion.comunidad === comunidad;
+                
+                // Filtrar por nivel
+                const matchesNivel = nivel === "" || oposicion.nivel === nivel;
+                
+                // Filtrar por estado
+                const matchesEstado = estado === "" || oposicion.estado === estado;
+                
+                // Devolver true si cumple todos los filtros
+                return matchesSearch && matchesComunidad && matchesNivel && matchesEstado;
+            });
+            
+            // Mostrar los resultados
+            mostrarResultados(resultados);
+        }
+        
+        // Función para mostrar los resultados en el DOM
+        function mostrarResultados(resultados) {
+            // Limpiar resultados anteriores
+            resultsList.innerHTML = '';
+            
+            // Si no hay resultados, mostrar mensaje
+            if (resultados.length === 0) {
+                resultsList.innerHTML = `
+                    <div class="no-results">
+                        <h3>No se encontraron oposiciones con los criterios seleccionados</h3>
+                        <p>Intenta cambiar los filtros o términos de búsqueda</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Mostrar cada resultado
+            resultados.forEach(oposicion => {
+                const resultItem = document.createElement('li');
+                resultItem.classList.add('result-item');
+                
+                // Formatear la información de cada oposición
+                resultItem.innerHTML = `
+                    <h3>${oposicion.titulo}</h3>
+                    <p><strong>Organismo:</strong> ${oposicion.organismo}</p>
+                    <p><strong>Plazas:</strong> <span class="highlight">${oposicion.plazas}</span></p>
+                    <p><strong>Publicación:</strong> ${oposicion.fechaPublicacion}</p>
+                    <p><strong>Fecha límite:</strong> ${oposicion.fechaLimite}</p>
+                    <p>${oposicion.descripcion}</p>
+                    <div>
+                        ${oposicion.comunidad ? `<span class="tag">${getNombreComunidad(oposicion.comunidad)}</span>` : '<span class="tag">Nacional</span>'}
+                        <span class="tag">${getNombreNivel(oposicion.nivel)}</span>
+                        <span class="tag">${getNombreEstado(oposicion.estado)}</span>
+                    </div>
+                `;
+                
+                resultsList.appendChild(resultItem);
+            });
+        }
+        
+        // Funciones auxiliares para obtener nombres legibles
+        function getNombreComunidad(comunidadId) {
+            const comunidades = {
+                'andalucia': 'Andalucía',
+                'aragon': 'Aragón',
+                'asturias': 'Asturias',
+                'baleares': 'Baleares',
+                'canarias': 'Canarias',
+                'cantabria': 'Cantabria',
+                'castillaleon': 'Castilla y León',
+                'castillamancha': 'Castilla-La Mancha',
+                'cataluna': 'Cataluña',
+                'ceuta': 'Ceuta',
+                'extremadura': 'Extremadura',
+                'galicia': 'Galicia',
+                'larioja': 'La Rioja',
+                'madrid': 'Madrid',
+                'melilla': 'Melilla',
+                'murcia': 'Murcia',
+                'navarra': 'Navarra',
+                'paisvasco': 'País Vasco',
+                'valencia': 'Comunidad Valenciana'
+            };
+            
+            return comunidades[comunidadId] || 'Nacional';
+        }
+        
+        function getNombreNivel(nivelId) {
+            const niveles = {
+                'a1': 'A1 - Doctor/Licenciado/Grado',
+                'a2': 'A2 - Grado/Diplomado',
+                'b1': 'B1 - Técnico Superior',
+                'b2': 'B2 - Bachiller/Técnico',
+                'c1': 'C1 - ESO',
+                'c2': 'C2 - Sin titulación'
+            };
+            
+            return niveles[nivelId] || 'Desconocido';
+        }
+        
+        function getNombreEstado(estadoId) {
+            const estados = {
+                'convocada': 'Convocada',
+                'plazo': 'En plazo',
+                'proxima': 'Próxima'
+            };
+            
+            return estados[estadoId] || 'Desconocido';
+        }
+        
+        // Evento para el botón de búsqueda
+        buscarButton.addEventListener('click', filtrarOposiciones);
+        
+        // Eventos para búsqueda en tiempo real (opcional)
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                filtrarOposiciones();
+            }
+        });
+        
+        // Cargar todos los resultados al iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            mostrarResultados(oposiciones);
+        });
+    </script>
+</body>
+</html>
